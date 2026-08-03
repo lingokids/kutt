@@ -28,8 +28,10 @@ const urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127
 const charsNeedEscapeInRegExp = ".$*+?()[]{}|^-";
 const customAlphabetEscaped = env.LINK_CUSTOM_ALPHABET
   .split("").map(c => charsNeedEscapeInRegExp.includes(c) ? "\\" + c : c).join("");
-const customAlphabetRegex = new RegExp(`^[${customAlphabetEscaped}_-]+$`);
-const customAddressRegex = new RegExp("^[a-zA-Z0-9-_]+$");
+// custom addresses may be a single segment ("my-link") or multiple segments
+// separated by slashes ("docs/getting-started"), but no empty segments
+const customAlphabetRegex = new RegExp(`^[${customAlphabetEscaped}_-]+(?:/[${customAlphabetEscaped}_-]+)*$`);
+const customAddressRegex = new RegExp("^[a-zA-Z0-9-_]+(?:/[a-zA-Z0-9-_]+)*$");
 
 function isAdmin(user) {
   return user.role === ROLES.ADMIN;
@@ -195,8 +197,16 @@ const preservedURLs = [
   "css",
   "fonts",
   "libs",
+  "scripts",
   "pricing"
 ];
+
+// a custom address is unusable if its first segment is a preserved URL,
+// because the route or static file for that segment would shadow it
+function isPreservedURL(address) {
+  const firstSegment = address.toLowerCase().split("/")[0];
+  return preservedURLs.some(url => url.toLowerCase() === firstSegment);
+}
 
 function parseBooleanQuery(query) {
   if (query === "true" || query === true) return true;
@@ -463,6 +473,7 @@ module.exports = {
   getUseragentBrowser,
   getUseragentOS,
   isAdmin,
+  isPreservedURL,
   parseBooleanQuery,
   parseDatetime,
   parseTimestamps,

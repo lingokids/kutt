@@ -53,7 +53,11 @@ if (env.OIDC_ENABLED) {
 // serve static
 app.use("/images", express.static("custom/images"));
 app.use("/css", express.static("custom/css", { extensions: ["css"] }));
-app.use(express.static("static"));
+app.use("/css", express.static("static/css"));
+app.use("/fonts", express.static("static/fonts"));
+app.use("/images", express.static("static/images"));
+app.use("/libs", express.static("static/libs"));
+app.use("/scripts", express.static("static/scripts"));
 
 app.use(passport.initialize());
 app.use(locals.isHTML);
@@ -79,7 +83,7 @@ app.use("/api/v2", routes.api);
 app.use("/api", routes.api);
 
 // finally, redirect the short link to the target
-app.get("/:id", asyncHandler(links.redirect));
+app.get("/:id(*)", asyncHandler(links.redirect));
 
 // 404 pages that don't exist
 app.get("*", renders.notFound);

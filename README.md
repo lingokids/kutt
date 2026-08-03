@@ -117,6 +117,7 @@ You can use files for each of the variables by appending `_FILE` to the name of 
 | `DB_USER` | Database user. Only if you use Postgres or MySQL. | `postgres` | `myuser` |
 | `DB_PASSWORD` | Database password. Only if you use Postgres or MySQL. | - | `mypassword` |
 | `DB_SSL` | Whether use SSL for the database connection. Only if you use Postgres or MySQL. | `false` | `true` |
+| `DB_SSL_CA_PEM` | PEM-encoded CA certificate to validate the database server's TLS certificate against. Only if you use Postgres or MySQL. Setting this enables SSL even if `DB_SSL` is `false`. Can also be set via a file with `DB_SSL_CA_PEM_FILE`. | - | `-----BEGIN CERTIFICATE-----\n...` |
 | `DB_POOL_MIN` | Minimum number of database connection pools. Only if you use Postgres or MySQL. | `0` | `2` |
 | `DB_POOL_MAX` | Maximum number of database connection pools. Only if you use Postgres or MySQL. | `10` | `5` |
 | `REDIS_ENABLED` | Whether to use Redis for cache | `false` | `true` |

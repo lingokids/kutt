@@ -8,6 +8,10 @@ const env = require("./server/env");
 
 const isSQLite = env.DB_CLIENT === "sqlite3" || env.DB_CLIENT === "better-sqlite3";
 
+const ssl = env.DB_SSL_CA_PEM
+  ? { ca: env.DB_SSL_CA_PEM, rejectUnauthorized: true }
+  : env.DB_SSL;
+
 module.exports = {
   client: env.DB_CLIENT,
   connection: {
@@ -17,7 +21,7 @@ module.exports = {
     user: env.DB_USER,
     port: env.DB_PORT,
     password: env.DB_PASSWORD,
-    ssl: env.DB_SSL,
+    ssl,
   },
   useNullAsDefault: true,
   migrations: {

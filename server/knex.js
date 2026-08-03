@@ -6,6 +6,10 @@ const isSQLite = env.DB_CLIENT === "sqlite3" || env.DB_CLIENT === "better-sqlite
 const isPostgres = env.DB_CLIENT === "pg" || env.DB_CLIENT === "pg-native";
 const isMySQL = env.DB_CLIENT === "mysql" || env.DB_CLIENT === "mysql2";
 
+const ssl = env.DB_SSL_CA_PEM
+  ? { ca: env.DB_SSL_CA_PEM, rejectUnauthorized: true }
+  : env.DB_SSL;
+
 const db = knex({
   client: env.DB_CLIENT,
   connection: {
@@ -15,7 +19,7 @@ const db = knex({
     database: env.DB_NAME,
     user: env.DB_USER,
     password: env.DB_PASSWORD,
-    ssl: env.DB_SSL,
+    ssl,
     pool: {
       min: env.DB_POOL_MIN,
       max: env.DB_POOL_MAX
